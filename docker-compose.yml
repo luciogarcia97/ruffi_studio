@@ -1,19 +1,19 @@
-# Solo desarrollo local. Las claves son de prueba y el puerto no se expone a la red.
+# Solo desarrollo local. Las credenciales salen de .env (ver .env.example).
 name: ruffi
 services:
   mysql:
     image: mysql:8.4
     container_name: ruffi_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ruffi_root_dev
-      MYSQL_DATABASE: ruffi
-      MYSQL_USER: ruffi
-      MYSQL_PASSWORD: ruffi_dev
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Falta MYSQL_ROOT_PASSWORD en .env}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?Falta MYSQL_DATABASE en .env}
+      MYSQL_USER: ${MYSQL_USER:?Falta MYSQL_USER en .env}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Falta MYSQL_PASSWORD en .env}
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
-    ports: ["127.0.0.1:3316:3306"]
+    ports: ["127.0.0.1:${MYSQL_PORT:-3316}:3306"]
     volumes: ["ruffi_mysql_data:/var/lib/mysql"]
     healthcheck:
-      test: ["CMD-SHELL", "mysql -h127.0.0.1 -uruffi -pruffi_dev -e 'select 1' ruffi"]
+      test: ["CMD-SHELL", "mysql -h127.0.0.1 -u\"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" -e 'select 1' \"$$MYSQL_DATABASE\""]
       interval: 5s
       retries: 30
 volumes:

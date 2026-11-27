@@ -1,6 +1,13 @@
 export interface Catalogo {
+  categorias: Categoria[];
   productos: Producto[];
   entregas: MetodoEntrega[];
+}
+
+export interface Categoria {
+  slug: string;
+  nombre: string;
+  descripcion: string;
 }
 
 export interface Producto {
@@ -9,6 +16,7 @@ export interface Producto {
   slug: string;
   descripcion: string;
   categoria: string;
+  categoriaSlug: string;
   diasElaboracion: number;
   variantes: { id: number; nombre: string; precio: number }[];
   imagenes: { url: string; textoAlternativo: string }[];

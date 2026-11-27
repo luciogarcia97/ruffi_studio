@@ -6,6 +6,12 @@ Requisitos: .NET SDK 10, Node 22.22.3 o superior (rama 22) y Docker Desktop abie
 
 ## Levantar en desarrollo
 
+La primera vez, creá el archivo de credenciales locales y completá las claves:
+
+```powershell
+Copy-Item .env.example .env
+```
+
 Desde la raíz, cada servidor en su propia terminal:
 
 ```powershell
@@ -22,7 +28,8 @@ npm --prefix frontend start
 - API: http://localhost:5044/api/catalogo
 - MySQL: 127.0.0.1:3316
 
-En desarrollo, la API aplica las migraciones y carga productos de ejemplo si la base está vacía.
+En desarrollo, la API lee `.env`, aplica las migraciones y carga productos de ejemplo si la base está vacía.
+Las fotos de prueba van en `frontend/public/demo/`, que no se sube al repositorio.
 
 ## Tests
 

@@ -1,13 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Ruffi.Application.Catalogo;
 using Ruffi.Infrastructure;
+using Ruffi.Infrastructure.Configuracion;
 using Ruffi.Infrastructure.Persistencia;
+
+// En desarrollo las credenciales vienen de .env; en un servidor, del entorno.
+ArchivoEnv.Cargar(Directory.GetCurrentDirectory());
 
 var builder = WebApplication.CreateBuilder(args);
 
-var conexion = builder.Configuration.GetConnectionString("Ruffi")
-    ?? throw new InvalidOperationException("Falta la conexión ConnectionStrings:Ruffi.");
-builder.Services.AddInfrastructure(conexion);
+builder.Services.AddInfrastructure(ConexionMySql.Crear(builder.Configuration));
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();

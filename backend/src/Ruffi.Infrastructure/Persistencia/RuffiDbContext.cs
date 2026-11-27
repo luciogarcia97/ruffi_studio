@@ -24,6 +24,7 @@ public class RuffiDbContext(DbContextOptions<RuffiDbContext> options) : DbContex
         {
             e.ToTable("categorias");
             e.HasIndex(x => x.Slug).IsUnique();
+            e.Property(x => x.Descripcion).HasMaxLength(500);
         });
         model.Entity<Producto>(e =>
         {

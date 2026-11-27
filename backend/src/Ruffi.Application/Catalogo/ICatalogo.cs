@@ -7,10 +7,14 @@ public interface ICatalogo
 }
 
 /// <summary>Contrato público: lo usan la API y el JSON exportado.</summary>
-public record CatalogoDto(IReadOnlyList<ProductoDto> Productos, IReadOnlyList<MetodoEntregaDto> Entregas);
+public record CatalogoDto(
+    IReadOnlyList<CategoriaDto> Categorias, IReadOnlyList<ProductoDto> Productos, IReadOnlyList<MetodoEntregaDto> Entregas);
+
+/// <summary>Solo categorías con al menos un producto disponible, en orden.</summary>
+public record CategoriaDto(string Slug, string Nombre, string Descripcion);
 
 public record ProductoDto(
-    int Id, string Nombre, string Slug, string Descripcion, string Categoria, int DiasElaboracion,
+    int Id, string Nombre, string Slug, string Descripcion, string Categoria, string CategoriaSlug, int DiasElaboracion,
     IReadOnlyList<VarianteDto> Variantes, IReadOnlyList<ImagenDto> Imagenes, IReadOnlyList<OpcionDto> Opciones);
 
 public record VarianteDto(int Id, string Nombre, decimal Precio);

@@ -1,11 +1,50 @@
-/* Colores provisorios hasta tener la marca de Ruffi. */
+/* Paleta de Ruffi. Naranja, rosa, amarillo y celeste solo decoran: no tienen contraste para texto. */
 :root {
-  --fondo: #faf8f5;
-  --superficie: #ffffff;
-  --texto: #2b2622;
-  --suave: #6a615a;
-  --borde: #e6dfd7;
-  --acento: #a23b4a;
+  --crema: #faf2df;
+  --papel: #fffdf7;
+  --azul: #354eab;
+  --marino: #35377f;
+  --cielo: #8da9ff;
+  --lila: #8d7cff;
+  --turquesa: #239fc0;
+  --amarillo: #ffea94;
+  --rosa: #ff9edb;
+  --naranja: #f96533;
+  --texto-suave: #55578f;
+
+  --fuente: 'Bricolage Grotesque', system-ui, sans-serif;
+  --fuente-logo: 'Lobster', cursive;
+
+  /* Las bandas ocupan todo el ancho; el contenido llega hasta 100rem con márgenes fluidos. */
+  --margen: clamp(1rem, 4vw, 4rem);
+  --contenido: min(100% - 2 * var(--margen), 100rem);
+  --alto-barra: 4.25rem;
 }
+@media (max-width: 47.99rem) { :root { --alto-barra: 6.75rem; } }
+
 * { box-sizing: border-box; }
-body { background: var(--fondo); color: var(--texto); font-family: system-ui, sans-serif; line-height: 1.5; margin: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--alto-barra) + 0.5rem); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  background: var(--crema);
+  color: var(--marino);
+  font-family: var(--fuente);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+h1, h2, h3 { font-variation-settings: 'opsz' 96; line-height: 1.08; margin: 0; text-wrap: balance; }
+p { text-wrap: pretty; }
+img { max-width: 100%; }
+a { color: var(--azul); }
+button { font: inherit; }
+
+:focus-visible { outline: 3px solid var(--azul); outline-offset: 3px; border-radius: 6px; }
+
+.salto {
+  background: var(--marino); border-radius: 999px; color: var(--papel); left: 1rem; padding: 0.5rem 1rem;
+  position: fixed; top: -4rem; z-index: 20;
+}
+.salto:focus { top: 0.75rem; }

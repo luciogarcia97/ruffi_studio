@@ -64,8 +64,10 @@ dist/
 .angular/
 .env
 .env.*
+!.env.example
 *.local.json
 TestResults/
 
 # Fotos de prueba, fuera del repositorio
-frontend/public/demo/
+frontend/public/demo/*
+!frontend/public/demo/.gitkeep

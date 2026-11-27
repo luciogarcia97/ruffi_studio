@@ -1,56 +1,166 @@
-<h1>Calendarios</h1>
-<p class="bajada">Impresos y armados a mano, a pedido.</p>
+<a class="salto" href="#contenido">Ir al contenido</a>
 
-@if (catalogo.isLoading()) {
-  <p role="status">Cargando el catálogo…</p>
-} @else if (catalogo.error()) {
-  <div role="alert">
-    <p>No pudimos cargar el catálogo.</p>
-    <button type="button" (click)="catalogo.reload()">Reintentar</button>
-  </div>
-} @else if (catalogo.hasValue()) {
-  <ul class="productos">
-    @for (p of catalogo.value().productos; track p.id) {
-      <li>
-        @if (p.imagenes[0]; as img) {
-          <img [src]="img.url" [alt]="img.textoAlternativo" loading="lazy" />
-        } @else {
-          <div class="sin-foto" aria-hidden="true">Sin foto</div>
+<header class="barra">
+  <div class="barra-interior">
+    <!-- Provisorio: texto con una tipografía parecida, hasta tener el logo en PNG transparente o SVG. -->
+    <a class="logo" href="#inicio" aria-label="Ruffi, volver al inicio">Ruffi</a>
+    <nav class="menu" aria-label="Secciones" #navegacion>
+      <ul>
+        @for (s of secciones(); track s.id) {
+          <li>
+            <a [href]="'#' + s.id" [attr.aria-current]="activa() === s.id ? 'true' : null">{{ s.nombre }}</a>
+          </li>
         }
-        <div class="datos">
-          <h2>{{ p.nombre }}</h2>
-          <p>{{ p.descripcion }}</p>
-          @if (p.opciones.length) {
-            <p class="etiqueta">Personalizable</p>
-          }
-          <p class="precio">
-            @if (p.variantes.length > 1) { Desde }
-            {{ precioDesde(p) | currency: 'ARS' : 'symbol-narrow' : '1.0-2' }}
-          </p>
-          <p class="plazo">Listo en {{ p.diasElaboracion }} días aprox.</p>
-        </div>
-      </li>
-    } @empty {
-      <li class="vacio">Por ahora no hay productos a la venta.</li>
-    }
-  </ul>
+      </ul>
+    </nav>
+  </div>
+</header>
 
-  <section aria-labelledby="entregas">
-    <h2 id="entregas">Entrega</h2>
-    <ul class="entregas">
-      @for (m of catalogo.value().entregas; track m.id) {
-        <li>
-          <strong>{{ m.nombre }}:</strong>
-          @if (m.tipo === 'Retiro' || m.costo === 0) {
-            sin costo
-          } @else {
-            {{ m.costo | currency: 'ARS' : 'symbol-narrow' : '1.0-2' }}
-            @if (m.gratisDesde !== null) {
-              (gratis desde {{ m.gratisDesde | currency: 'ARS' : 'symbol-narrow' : '1.0-2' }})
-            }
-          }
-        </li>
+<main id="contenido">
+  <section id="inicio" class="portada" aria-labelledby="titulo-portada">
+    <svg class="guirnalda" viewBox="0 0 740 70" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 6 Q370 40 740 6" fill="none" stroke="var(--marino)" stroke-width="2" />
+      @for (b of banderines; track b.x) {
+        <polygon
+          [attr.points]="(b.x - 16) + ',0 ' + (b.x + 16) + ',0 ' + b.x + ',38'"
+          [attr.transform]="'translate(0 ' + (6 + 17 * (1 - ((b.x - 370) / 370) * ((b.x - 370) / 370))) + ')'"
+          [style.fill]="b.color"
+        />
       }
-    </ul>
+    </svg>
+
+    <div class="portada-interior">
+      <div class="portada-texto">
+        <h1 id="titulo-portada">Calendarios y cotillón, hechos a mano para tu fiesta</h1>
+        <p>Los armamos a pedido, con el personaje, el nombre o las fotos que elijas.</p>
+        @if (secciones()[0]; as primera) {
+          <a class="boton" [href]="'#' + primera.id">Ver {{ primera.nombre.toLowerCase() }}</a>
+        }
+      </div>
+
+      @if (fotosPortada().length) {
+        <div class="collage" [class.collage-una]="fotosPortada().length === 1">
+          @for (f of fotosPortada(); track f.url; let i = $index) {
+            <img [src]="f.url" [alt]="f.textoAlternativo" [attr.fetchpriority]="i === 0 ? 'high' : null" />
+          }
+        </div>
+      }
+    </div>
   </section>
-}
+
+  @if (catalogo.isLoading()) {
+    <p class="estado" role="status">Cargando productos…</p>
+  } @else if (catalogo.error()) {
+    <div class="estado" role="alert">
+      <p>No se pudieron cargar los productos. Revisá tu conexión y volvé a intentar.</p>
+      <button type="button" class="boton" (click)="catalogo.reload()">Reintentar</button>
+    </div>
+  } @else if (!categorias().length) {
+    <p class="estado">Por ahora no hay productos a la venta.</p>
+  }
+
+  @for (c of categorias(); track c.slug; let par = $even) {
+    <section
+      #seccion
+      class="banda categoria"
+      [class.banda-tenida]="!par"
+      [id]="c.slug"
+      [attr.aria-labelledby]="'titulo-' + c.slug"
+      [style.--tema]="c.tema.fuerte"
+      [style.--tema-suave]="c.tema.suave"
+    >
+      <div class="interior">
+        <div class="encabezado">
+          <h2 [id]="'titulo-' + c.slug">{{ c.nombre }}</h2>
+          @if (c.descripcion) {
+            <p>{{ c.descripcion }}</p>
+          }
+        </div>
+
+        <ul class="grilla">
+          @for (p of c.productos; track p.id) {
+            <li class="producto">
+              <div class="foto">
+                @if (p.imagenes[0]; as img) {
+                  <img [src]="img.url" [alt]="img.textoAlternativo" loading="lazy" />
+                } @else {
+                  <span class="sin-foto">Foto próximamente</span>
+                }
+              </div>
+              <h3>{{ p.nombre }}</h3>
+              <p class="descripcion">{{ p.descripcion }}</p>
+              <p class="precio">
+                @if (p.variantes.length > 1) { Desde }
+                {{ precioDesde(p) | currency: 'ARS' : 'symbol-narrow' : '1.0-2' }}
+              </p>
+              @if (medidas(p); as m) {
+                <p class="detalle">En {{ m }}</p>
+              }
+              <p class="detalle">Listo en {{ p.diasElaboracion }} días aprox.</p>
+              @if (p.opciones.length) {
+                <p class="etiqueta">Personalizable</p>
+              }
+            </li>
+          }
+        </ul>
+      </div>
+    </section>
+  }
+
+  <section #seccion id="como-pedir" class="banda" aria-labelledby="titulo-como-pedir">
+    <div class="interior">
+      <div class="encabezado">
+        <h2 id="titulo-como-pedir">Cómo pedir</h2>
+        <p>Cada producto se arma a mano, por eso indica cuántos días tarda.</p>
+      </div>
+      <ol class="pasos">
+        <li><strong>Elegí</strong> el producto y contanos el personaje, el nombre o las fotos.</li>
+        <li><strong>Confirmá</strong> el pedido por WhatsApp y pagá por transferencia.</li>
+        <li><strong>Lo armamos</strong> a mano en los días que indica cada producto.</li>
+        <li><strong>Retiralo</strong> o recibilo en tu casa.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section #seccion id="envios" class="banda banda-tenida" aria-labelledby="titulo-envios" style="--tema-suave: var(--amarillo)">
+    <div class="interior">
+      <div class="encabezado">
+        <h2 id="titulo-envios">Envíos</h2>
+        <p>El costo se suma al total del pedido.</p>
+      </div>
+      @if (catalogo.hasValue() && catalogo.value().entregas.length) {
+        <ul class="entregas">
+          @for (m of catalogo.value().entregas; track m.id) {
+            <li>
+              <h3>{{ m.nombre }}</h3>
+              @if (m.tipo === 'Retiro' || m.costo === 0) {
+                <p class="precio">Sin costo</p>
+                @if (m.tipo === 'Retiro') {
+                  <p>Coordinamos el día y el lugar por WhatsApp.</p>
+                }
+              } @else {
+                <p class="precio">{{ m.costo | currency: 'ARS' : 'symbol-narrow' : '1.0-2' }}</p>
+                @if (m.gratisDesde !== null) {
+                  <p>Gratis en compras desde {{ m.gratisDesde | currency: 'ARS' : 'symbol-narrow' : '1.0-2' }}.</p>
+                }
+              }
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="interior">
+    <p><span class="logo-chico">Ruffi</span> Calendarios y cotillón hechos a mano en Argentina.</p>
+    <nav aria-label="Secciones, al pie">
+      <ul>
+        @for (s of secciones(); track s.id) {
+          <li><a [href]="'#' + s.id">{{ s.nombre }}</a></li>
+        }
+      </ul>
+    </nav>
+  </div>
+</footer>

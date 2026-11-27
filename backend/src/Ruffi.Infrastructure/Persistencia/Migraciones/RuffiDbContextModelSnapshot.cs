@@ -28,6 +28,11 @@ namespace Ruffi.Infrastructure.Persistencia.Migraciones
                     b.Property<bool>("Activa")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(200)

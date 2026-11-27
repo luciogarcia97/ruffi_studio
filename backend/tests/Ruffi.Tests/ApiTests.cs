@@ -31,6 +31,6 @@ public class ApiTests(WebApplicationFactory<Program> fabrica) : IClassFixture<We
     private class CatalogoFalso : ICatalogo
     {
         public Task<CatalogoDto> ObtenerAsync(CancellationToken ct) =>
-            Task.FromResult(new CatalogoDto([], [new(1, "Envío", "Envio", 5000, 40000)]));
+            Task.FromResult(new CatalogoDto([], [], [new(1, "Envío", "Envio", 5000, 40000)]));
     }
 }

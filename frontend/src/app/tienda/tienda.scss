@@ -1,13 +1,115 @@
-h1 { margin: 0; }
-.bajada, .plazo { color: var(--suave); }
-ul { list-style: none; padding: 0; }
-.productos { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr)); margin: 1.5rem 0 2.5rem; }
-.productos > li { background: var(--superficie); border: 1px solid var(--borde); border-radius: 12px; overflow: hidden; }
-.productos > li.vacio { padding: 1.25rem; }
-img, .sin-foto { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
-.sin-foto { display: grid; place-items: center; background: var(--borde); color: var(--suave); }
-.datos { padding: 1rem 1.25rem; }
-.datos h2 { font-size: 1.15rem; margin: 0; }
-.datos p { margin: 0.5rem 0 0; }
-.datos .precio { font-size: 1.2rem; font-weight: 700; }
-.etiqueta { color: var(--acento); font-weight: 600; font-size: 0.875rem; }
+:host { display: block; }
+
+ul, ol { list-style: none; margin: 0; padding: 0; }
+
+.interior, .barra-interior, .portada-interior { margin-inline: auto; width: var(--contenido); }
+
+/* Barra fija: chica, opaca y siempre visible. */
+.barra {
+  background: var(--crema);
+  border-bottom: 2px solid var(--marino);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.barra-interior { align-items: center; display: flex; gap: 2rem; min-height: var(--alto-barra); }
+.logo, .logo-chico { color: var(--azul); font-family: var(--fuente-logo); text-decoration: none; }
+.logo { font-size: 2.4rem; line-height: 1; }
+
+.menu { margin-left: auto; }
+.menu ul { display: flex; gap: 0.25rem; }
+.menu a {
+  border-radius: 999px; color: var(--marino); display: block; font-weight: 600; padding: 0.45rem 1rem;
+  text-decoration: none; white-space: nowrap;
+}
+.menu a:hover { background: color-mix(in srgb, var(--cielo) 30%, transparent); }
+.menu a[aria-current='true'] { background: var(--marino); color: var(--papel); }
+
+/* En celular el menú queda visible en una segunda fila que se desliza de costado. */
+@media (max-width: 47.99rem) {
+  .barra-interior { align-content: center; flex-wrap: wrap; gap: 0.25rem; padding-block: 0.4rem; }
+  .logo { font-size: 2rem; }
+  .menu { margin-inline: calc(-1 * var(--margen)); overflow-x: auto; scrollbar-width: none; width: calc(100% + 2 * var(--margen)); }
+  .menu ul { padding-inline: calc(var(--margen) - 0.6rem); }
+  .menu a { padding: 0.4rem 0.75rem; }
+}
+
+/* Portada */
+.portada { overflow: hidden; padding-bottom: clamp(3rem, 6vw, 5rem); }
+.guirnalda { display: block; height: clamp(3rem, 6vw, 5rem); width: 100%; }
+
+.portada-interior { align-items: center; display: grid; gap: clamp(2rem, 4vw, 4rem); padding-top: clamp(1.5rem, 4vw, 3rem); }
+@media (min-width: 56rem) { .portada-interior { grid-template-columns: 5fr 7fr; } }
+
+h1 { font-size: clamp(2.5rem, 5.5vw, 5rem); font-weight: 800; letter-spacing: -0.025em; max-width: 13ch; }
+.portada-texto p { color: var(--texto-suave); font-size: clamp(1.1rem, 1.5vw, 1.3rem); margin: 1.25rem 0 2rem; max-width: 36ch; }
+
+.boton {
+  background: var(--azul); border: 0; border-radius: 999px; color: var(--papel); cursor: pointer; display: inline-block;
+  font-weight: 700; padding: 0.85rem 1.6rem; text-decoration: none;
+}
+.boton:hover { background: var(--marino); }
+
+/* Collage: una foto grande y dos chicas, como fotos pegadas en la pared. */
+.collage { display: grid; gap: clamp(0.75rem, 1.5vw, 1.25rem); grid-template-columns: 3fr 2fr; grid-template-rows: 1fr 1fr; height: clamp(22rem, calc(100svh - var(--alto-barra) - 9rem), 40rem); }
+.collage img {
+  border: 3px solid var(--marino); border-radius: 16px; display: block; height: 100%; min-height: 0; object-fit: cover; width: 100%;
+}
+.collage img:nth-child(1) { box-shadow: 10px 10px 0 var(--amarillo); grid-row: span 2; rotate: -1.5deg; }
+.collage img:nth-child(2) { box-shadow: 8px 8px 0 var(--rosa); rotate: 2deg; }
+.collage img:nth-child(3) { box-shadow: 8px 8px 0 var(--cielo); rotate: -1deg; }
+.collage-una { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+.collage-una img:nth-child(1) { aspect-ratio: 4 / 3; grid-row: auto; }
+@media (max-width: 35.99rem) {
+  .collage { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+  .collage img:nth-child(1) { aspect-ratio: 4 / 3; grid-row: auto; }
+  .collage img:nth-child(n + 2) { display: none; }
+}
+
+/* Bandas de sección, de lado a lado */
+.banda { padding-block: clamp(3rem, 6vw, 5.5rem); }
+.banda-tenida { background: color-mix(in srgb, var(--tema-suave) 22%, var(--crema)); }
+.banda:not(.banda-tenida) { background: var(--papel); }
+
+.encabezado { align-items: end; display: flex; flex-wrap: wrap; gap: 0.75rem 3rem; justify-content: space-between; margin-bottom: clamp(1.75rem, 3vw, 2.75rem); }
+h2 { font-size: clamp(2rem, 4vw, 3.25rem); font-weight: 800; letter-spacing: -0.02em; }
+.encabezado p { color: var(--texto-suave); font-size: 1.15rem; margin: 0; max-width: 46ch; }
+.categoria h2 { text-decoration: underline 0.18em var(--tema-suave); text-underline-offset: 0.16em; }
+
+/* El ancho extra se usa para mostrar más productos por fila, no para estirar los textos. */
+.grilla { display: grid; gap: clamp(2rem, 3vw, 3rem) clamp(1.25rem, 2vw, 2rem); grid-template-columns: repeat(auto-fill, minmax(min(16.5rem, 100%), 1fr)); }
+.producto { max-width: 34rem; }
+.foto { aspect-ratio: 1; background: var(--crema); border: 2px solid var(--marino); border-radius: 14px; box-shadow: 7px 7px 0 var(--tema-suave); display: grid; overflow: hidden; place-items: center; }
+.foto img { height: 100%; object-fit: cover; width: 100%; }
+.sin-foto { color: var(--texto-suave); }
+.producto h3 { font-size: 1.3rem; font-weight: 700; margin-top: 1.1rem; }
+.producto p { margin: 0.35rem 0 0; }
+.descripcion { color: var(--texto-suave); max-width: 40ch; }
+.precio { color: var(--tema, var(--azul)); font-size: 1.35rem; font-weight: 800; }
+.detalle { color: var(--texto-suave); font-size: 0.9375rem; }
+.etiqueta { color: var(--azul); font-size: 0.9375rem; font-weight: 700; }
+
+/* Pasos: el pedido sí es una secuencia, por eso van numerados. */
+.pasos { counter-reset: paso; display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); }
+.pasos li { counter-increment: paso; font-size: 1.1rem; max-width: 30ch; }
+.pasos li::before {
+  background: var(--amarillo); border: 2px solid var(--marino); border-radius: 50%; content: counter(paso); display: grid;
+  font-size: 1.25rem; font-weight: 800; height: 2.75rem; margin-bottom: 0.85rem; place-items: center; width: 2.75rem;
+}
+
+.entregas { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 24rem)); }
+.entregas li { background: var(--papel); border: 2px solid var(--marino); border-radius: 18px; padding: 1.5rem 1.75rem; }
+.entregas h3 { font-size: 1.35rem; font-weight: 700; }
+.entregas p { color: var(--texto-suave); margin: 0.35rem 0 0; }
+.entregas .precio { color: var(--marino); }
+
+.estado { margin-inline: auto; padding-block: 3rem; width: var(--contenido); }
+.estado p { margin-top: 0; }
+
+.pie { background: var(--marino); color: var(--papel); padding-block: 2.5rem 3rem; }
+.pie .interior { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem 3rem; justify-content: space-between; }
+.pie p { margin: 0; }
+.pie .logo-chico { color: var(--amarillo); font-size: 1.6rem; margin-right: 0.35rem; }
+.pie ul { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+.pie a { color: var(--papel); }
+.pie :focus-visible { outline-color: var(--amarillo); }
