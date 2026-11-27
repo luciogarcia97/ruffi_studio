@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Ruffi.Api/Ruffi.Api.csproj" />
+    <Project Path="src/Ruffi.Application/Ruffi.Application.csproj" />
+    <Project Path="src/Ruffi.Domain/Ruffi.Domain.csproj" />
+    <Project Path="src/Ruffi.Infrastructure/Ruffi.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Ruffi.Tests/Ruffi.Tests.csproj" />
+  </Folder>
+</Solution>

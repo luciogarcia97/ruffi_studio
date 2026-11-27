@@ -1,0 +1,56 @@
+<h1>Calendarios</h1>
+<p class="bajada">Impresos y armados a mano, a pedido.</p>
+
+@if (catalogo.isLoading()) {
+  <p role="status">Cargando el catálogo…</p>
+} @else if (catalogo.error()) {
+  <div role="alert">
+    <p>No pudimos cargar el catálogo.</p>
+    <button type="button" (click)="catalogo.reload()">Reintentar</button>
+  </div>
+} @else if (catalogo.hasValue()) {
+  <ul class="productos">
+    @for (p of catalogo.value().productos; track p.id) {
+      <li>
+        @if (p.imagenes[0]; as img) {
+          <img [src]="img.url" [alt]="img.textoAlternativo" loading="lazy" />
+        } @else {
+          <div class="sin-foto" aria-hidden="true">Sin foto</div>
+        }
+        <div class="datos">
+          <h2>{{ p.nombre }}</h2>
+          <p>{{ p.descripcion }}</p>
+          @if (p.opciones.length) {
+            <p class="etiqueta">Personalizable</p>
+          }
+          <p class="precio">
+            @if (p.variantes.length > 1) { Desde }
+            {{ precioDesde(p) | currency: 'ARS' : 'symbol-narrow' : '1.0-2' }}
+          </p>
+          <p class="plazo">Listo en {{ p.diasElaboracion }} días aprox.</p>
+        </div>
+      </li>
+    } @empty {
+      <li class="vacio">Por ahora no hay productos a la venta.</li>
+    }
+  </ul>
+
+  <section aria-labelledby="entregas">
+    <h2 id="entregas">Entrega</h2>
+    <ul class="entregas">
+      @for (m of catalogo.value().entregas; track m.id) {
+        <li>
+          <strong>{{ m.nombre }}:</strong>
+          @if (m.tipo === 'Retiro' || m.costo === 0) {
+            sin costo
+          } @else {
+            {{ m.costo | currency: 'ARS' : 'symbol-narrow' : '1.0-2' }}
+            @if (m.gratisDesde !== null) {
+              (gratis desde {{ m.gratisDesde | currency: 'ARS' : 'symbol-narrow' : '1.0-2' }})
+            }
+          }
+        </li>
+      }
+    </ul>
+  </section>
+}

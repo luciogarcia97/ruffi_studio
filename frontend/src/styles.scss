@@ -1,0 +1,11 @@
+/* Colores provisorios hasta tener la marca de Ruffi. */
+:root {
+  --fondo: #faf8f5;
+  --superficie: #ffffff;
+  --texto: #2b2622;
+  --suave: #6a615a;
+  --borde: #e6dfd7;
+  --acento: #a23b4a;
+}
+* { box-sizing: border-box; }
+body { background: var(--fondo); color: var(--texto); font-family: system-ui, sans-serif; line-height: 1.5; margin: 0; }

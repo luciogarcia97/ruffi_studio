@@ -1,0 +1,13 @@
+h1 { margin: 0; }
+.bajada, .plazo { color: var(--suave); }
+ul { list-style: none; padding: 0; }
+.productos { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr)); margin: 1.5rem 0 2.5rem; }
+.productos > li { background: var(--superficie); border: 1px solid var(--borde); border-radius: 12px; overflow: hidden; }
+.productos > li.vacio { padding: 1.25rem; }
+img, .sin-foto { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.sin-foto { display: grid; place-items: center; background: var(--borde); color: var(--suave); }
+.datos { padding: 1rem 1.25rem; }
+.datos h2 { font-size: 1.15rem; margin: 0; }
+.datos p { margin: 0.5rem 0 0; }
+.datos .precio { font-size: 1.2rem; font-weight: 700; }
+.etiqueta { color: var(--acento); font-weight: 600; font-size: 0.875rem; }
