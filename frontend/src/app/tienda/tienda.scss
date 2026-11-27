@@ -12,11 +12,11 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
   top: 0;
   z-index: 10;
 }
-.barra-interior { align-items: center; display: flex; gap: 2rem; min-height: var(--alto-barra); }
+.barra-interior { align-items: center; display: flex; gap: 2rem; height: var(--alto-barra); }
 .logo, .logo-chico { color: var(--azul); font-family: var(--fuente-logo); text-decoration: none; }
-.logo { font-size: 2.4rem; line-height: 1; }
+.logo { flex: none; font-size: 2.4rem; line-height: 1; }
 
-.menu { margin-left: auto; }
+.menu { margin-left: auto; min-width: 0; position: relative; }
 .menu ul { display: flex; gap: 0.25rem; }
 .menu a {
   border-radius: 999px; color: var(--marino); display: block; font-weight: 600; padding: 0.45rem 1rem;
@@ -24,25 +24,31 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
 }
 .menu a:hover { background: color-mix(in srgb, var(--cielo) 30%, transparent); }
 .menu a[aria-current='true'] { background: var(--marino); color: var(--papel); }
+/* Con dedo, objetivos de al menos 44px de alto. */
+@media (pointer: coarse) { .menu a { padding-block: 0.65rem; } }
 
-/* En celular el menú queda visible en una segunda fila que se desliza de costado. */
-@media (max-width: 47.99rem) {
-  .barra-interior { align-content: center; flex-wrap: wrap; gap: 0.25rem; padding-block: 0.4rem; }
-  .logo { font-size: 2rem; }
-  .menu { margin-inline: calc(-1 * var(--margen)); overflow-x: auto; scrollbar-width: none; width: calc(100% + 2 * var(--margen)); }
-  .menu ul { padding-inline: calc(var(--margen) - 0.6rem); }
-  .menu a { padding: 0.4rem 0.75rem; }
+/* Celular, y cualquier pantalla baja: una sola fila. El menú se desliza de costado
+   y se desvanece en el borde para mostrar que hay más. */
+@media (max-width: 47.99rem), (max-height: 34rem) and (orientation: landscape) {
+  .barra-interior { gap: 0.75rem; }
+  .logo { font-size: 1.9rem; }
+  .menu {
+    flex: 1; margin-right: calc(-1 * var(--margen)); overflow-x: auto; scrollbar-width: none;
+    mask-image: linear-gradient(to right, transparent, #000 0.75rem, #000 calc(100% - 2rem), transparent);
+  }
+  .menu::-webkit-scrollbar { display: none; }
+  .menu ul { padding-inline: 0.5rem 2rem; width: max-content; }
+  .menu a { padding-inline: 0.8rem; }
 }
 
 /* Portada */
 .portada { overflow: hidden; padding-bottom: clamp(3rem, 6vw, 5rem); }
-.guirnalda { display: block; height: clamp(3rem, 6vw, 5rem); width: 100%; }
+.guirnalda { display: block; height: clamp(2.5rem, 6vw, 5rem); width: 100%; }
 
-.portada-interior { align-items: center; display: grid; gap: clamp(2rem, 4vw, 4rem); padding-top: clamp(1.5rem, 4vw, 3rem); }
-@media (min-width: 56rem) { .portada-interior { grid-template-columns: 5fr 7fr; } }
+.portada-interior { align-items: center; display: grid; gap: clamp(1.75rem, 4vw, 4rem); padding-top: clamp(1.25rem, 4vw, 3rem); }
 
-h1 { font-size: clamp(2.5rem, 5.5vw, 5rem); font-weight: 800; letter-spacing: -0.025em; max-width: 13ch; }
-.portada-texto p { color: var(--texto-suave); font-size: clamp(1.1rem, 1.5vw, 1.3rem); margin: 1.25rem 0 2rem; max-width: 36ch; }
+h1 { font-size: clamp(2.4rem, 1.6rem + 3.8vw, 4rem); font-weight: 800; letter-spacing: -0.025em; max-width: 13ch; }
+.portada-texto p { color: var(--texto-suave); font-size: clamp(1.1rem, 1rem + 0.4vw, 1.3rem); margin: 1.25rem 0 2rem; max-width: 36ch; }
 
 .boton {
   background: var(--azul); border: 0; border-radius: 999px; color: var(--papel); cursor: pointer; display: inline-block;
@@ -50,36 +56,48 @@ h1 { font-size: clamp(2.5rem, 5.5vw, 5rem); font-weight: 800; letter-spacing: -0
 }
 .boton:hover { background: var(--marino); }
 
-/* Collage: una foto grande y dos chicas, como fotos pegadas en la pared. */
-.collage { display: grid; gap: clamp(0.75rem, 1.5vw, 1.25rem); grid-template-columns: 3fr 2fr; grid-template-rows: 1fr 1fr; height: clamp(22rem, calc(100svh - var(--alto-barra) - 9rem), 40rem); }
+/* Collage: una foto grande y dos chicas, como fotos pegadas en la pared.
+   Apilado (celular y tablet vertical) se limita para no superar la pantalla. */
+.collage {
+  display: grid; gap: clamp(0.75rem, 1.5vw, 1.25rem); grid-template-columns: 3fr 2fr; grid-template-rows: 1fr 1fr;
+  height: clamp(16rem, 50vw, 26rem);
+}
 .collage img {
   border: 3px solid var(--marino); border-radius: 16px; display: block; height: 100%; min-height: 0; object-fit: cover; width: 100%;
 }
 .collage img:nth-child(1) { box-shadow: 10px 10px 0 var(--amarillo); grid-row: span 2; rotate: -1.5deg; }
 .collage img:nth-child(2) { box-shadow: 8px 8px 0 var(--rosa); rotate: 2deg; }
 .collage img:nth-child(3) { box-shadow: 8px 8px 0 var(--cielo); rotate: -1deg; }
-.collage-una { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
-.collage-una img:nth-child(1) { aspect-ratio: 4 / 3; grid-row: auto; }
+.collage-una { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.collage-una img:nth-child(1) { grid-row: auto; }
 @media (max-width: 35.99rem) {
-  .collage { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+  .collage { grid-template-columns: 1fr; grid-template-rows: 1fr; height: auto; }
   .collage img:nth-child(1) { aspect-ratio: 4 / 3; grid-row: auto; }
   .collage img:nth-child(n + 2) { display: none; }
 }
 
+/* Dos columnas: pantallas anchas, o celulares y tablets apaisados. El collage acompaña el alto disponible. */
+@media (min-width: 56rem), (min-width: 40rem) and (orientation: landscape) and (max-height: 34rem) {
+  .portada-interior { grid-template-columns: 5fr 7fr; }
+  h1 { font-size: clamp(2.4rem, 5.2vw, 5rem); }
+  .collage { height: clamp(15rem, calc(100svh - var(--alto-barra) - 9rem), 40rem); }
+}
+
 /* Bandas de sección, de lado a lado */
-.banda { padding-block: clamp(3rem, 6vw, 5.5rem); }
+.banda { padding-block: clamp(2.75rem, 6vw, 5.5rem); }
 .banda-tenida { background: color-mix(in srgb, var(--tema-suave) 22%, var(--crema)); }
 .banda:not(.banda-tenida) { background: var(--papel); }
 
-.encabezado { align-items: end; display: flex; flex-wrap: wrap; gap: 0.75rem 3rem; justify-content: space-between; margin-bottom: clamp(1.75rem, 3vw, 2.75rem); }
-h2 { font-size: clamp(2rem, 4vw, 3.25rem); font-weight: 800; letter-spacing: -0.02em; }
-.encabezado p { color: var(--texto-suave); font-size: 1.15rem; margin: 0; max-width: 46ch; }
+.encabezado { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+h2 { font-size: clamp(2rem, 1.4rem + 2.4vw, 3.25rem); font-weight: 800; letter-spacing: -0.02em; }
+.encabezado p { color: var(--texto-suave); font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem); margin: 0.75rem 0 0; max-width: 52ch; }
 .categoria h2 { text-decoration: underline 0.18em var(--tema-suave); text-underline-offset: 0.16em; }
 
-/* El ancho extra se usa para mostrar más productos por fila, no para estirar los textos. */
+/* El ancho extra se usa para mostrar más productos por fila, no para estirar los textos.
+   Fotos 4:3 para que una fila completa, con su precio, entre en la pantalla de una notebook. */
 .grilla { display: grid; gap: clamp(2rem, 3vw, 3rem) clamp(1.25rem, 2vw, 2rem); grid-template-columns: repeat(auto-fill, minmax(min(16.5rem, 100%), 1fr)); }
 .producto { max-width: 34rem; }
-.foto { aspect-ratio: 1; background: var(--crema); border: 2px solid var(--marino); border-radius: 14px; box-shadow: 7px 7px 0 var(--tema-suave); display: grid; overflow: hidden; place-items: center; }
+.foto { aspect-ratio: 4 / 3; background: var(--crema); border: 2px solid var(--marino); border-radius: 14px; box-shadow: 7px 7px 0 var(--tema-suave); display: grid; overflow: hidden; place-items: center; }
 .foto img { height: 100%; object-fit: cover; width: 100%; }
 .sin-foto { color: var(--texto-suave); }
 .producto h3 { font-size: 1.3rem; font-weight: 700; margin-top: 1.1rem; }

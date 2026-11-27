@@ -20,7 +20,7 @@
   --contenido: min(100% - 2 * var(--margen), 100rem);
   --alto-barra: 4.25rem;
 }
-@media (max-width: 47.99rem) { :root { --alto-barra: 6.75rem; } }
+@media (max-width: 47.99rem), (max-height: 34rem) and (orientation: landscape) { :root { --alto-barra: 3.75rem; } }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: calc(var(--alto-barra) + 0.5rem); }
